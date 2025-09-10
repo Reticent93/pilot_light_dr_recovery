@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Local .terraform directories
 .terraform/
 
@@ -35,3 +36,70 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+=======
+# Terraform core
+.terraform/
+*.tfstate
+*.tfstate.*
+*.terraform.lock.hcl
+
+# Sensitive data files
+terraform.tfvars
+*.auto.tfvars
+*.tfvars
+variables.tf.json
+secrets.tf
+
+# Credentials and keys
+*.pem
+*.key
+*.pub
+*.crt
+*.cer
+aws_credentials
+.aws/credentials
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+terraform.log
+debug.log
+
+# Plan outputs
+*.tfplan
+plan.out
+apply.out
+
+# Backup files
+backup/
+*.backup
+
+# Local modules
+modules/local/
+temp/
+
+# Test files
+test/
+*.test
+fixtures/
+
+.terraform/
+.terraform.lock.hcl
+.terraform/
+>>>>>>> b943b47 (initial commit)
