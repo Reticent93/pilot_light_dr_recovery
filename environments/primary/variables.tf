@@ -20,3 +20,4 @@ variable "vpc_configs" {
         enable_dns_hostnames = bool
     })
 }
+

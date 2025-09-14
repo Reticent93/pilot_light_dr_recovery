@@ -29,3 +29,11 @@ resource "aws_route_table" "primary_public_rt" {
         Name = "${var.project_name}-public-rt"
     }
 }
+
+module "security_groups" {
+    source = "../../modules/security-groups"
+    vpc_id = aws_vpc.primary_vpc.id
+    project_name = var.project_name
+    environment = "primary"
+    allowed_cidr_blocks = ["10.0.0.0/8", "203.0.113.0/24"]
+}
