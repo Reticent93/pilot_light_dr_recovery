@@ -1,5 +1,20 @@
-variable "instance_type" {
-  type = string                     # The type of the variable, in this case a string
-  default = "t2.micro"                 # Default value for the variable
-  description = "The type of EC2 instance" # Description of what this variable represents
+variable "vpc_id" {
+    description = "The ID of the VPC where security groups will be created"
+    type        = string
+}
+
+variable "project_name" {
+    description = "Name of the project"
+    type        = string
+}
+
+variable "environment" {
+    description = "Name of the environment"
+    type        = string
+}
+
+variable "allowed_cidr_blocks" {
+  description = "List of CIDR blocks allowed for SSH access"
+    type        = list(string)
+  default     = ["10.0.0.0/8"]
 }

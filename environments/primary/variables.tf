@@ -21,3 +21,9 @@ variable "vpc_configs" {
     })
 }
 
+variable "environment" {
+    description = "Environment name (primary, secondary, global)"
+    type        = string
+    default     = "primary"
+}
+

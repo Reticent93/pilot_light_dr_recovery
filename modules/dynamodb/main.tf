@@ -1,20 +1,27 @@
-terraform {
-  required_version = ">= 1.0.0" # Ensure that the Terraform version is 1.0.0 or higher
+resource "aws_dynamodb_table" "main" {
+  name = "${var.project_name}-table"
+    billing_mode = "PAY_PER_REQUEST"
+    hash_key     = "id"
+    stream_enabled = true
+    deletion_protection_enabled = true
+  stream_view_type = "NEW_AND_OLD_IMAGES"
 
-  required_providers {
-    aws = {
-      source = "hashicorp/aws" # Specify the source of the AWS provider
-      version = "~> 4.0"        # Use a version of the AWS provider that is compatible with version
+    attribute {
+      name = "id"
+      type = "S"
     }
-  }
+
+    point_in_time_recovery {
+      enabled = true
+    }
+
+    replica {
+      region_name = var.dr_region
+    }
+
+    tags = {
+      Name = "${var.project_name}-dynamodb-table"
+        Environment = var.environment
+    }
 }
 
-provider "aws" {
-  region = "us-east-1" # Set the AWS region to US East (N. Virginia)
-}
-
-resource "aws_instance" "aws_example" {
-  tags = {
-    Name = "ExampleInstance" # Tag the instance with a Name tag for easier identification
-  }
-}
