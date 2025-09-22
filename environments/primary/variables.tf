@@ -3,10 +3,16 @@ variable "project_name" {
     type        = string
 }
 
-variable "aws_region" {
+variable "aws_primary_region" {
     description = "AWS region to deploy resources"
     type        = string
     default     = "us-east-1"
+}
+
+variable "aws_secondary_region" {
+    description = "AWS region to deploy resources"
+    type        = string
+    default     = "eu-west-1"
 }
 
 variable "vpc_configs" {
