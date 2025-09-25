@@ -8,7 +8,7 @@ variable "aws_region" {
   type        = string
 }
 
-variable "application_name" {
+variable "project_name" {
   description = "Name of the application"
   type        = string
   default = "pilot-light-dr-recovery"
@@ -67,7 +67,7 @@ variable "enable_additional_volume" {
     default     = true
 }
 
-variable "log_volume_size" {
+variable "additional_ebs_volume_size" {
     description = "Size of the additional EBS volume in GB"
     type        = number
     default     = 20
@@ -246,3 +246,32 @@ variable "is_pilot_light" {
     default     = false
 }
 
+variable "pilot_light_instance_type" {
+    description = "Instance type for pilot light instances (smaller size)"
+    type        = string
+    default     = "t3.micro"
+}
+
+variable "pilot_light_min_capacity" {
+    description = "Minimum capacity for pilot light environment"
+    type        = number
+    default     = 1
+}
+
+variable "pilot_light_max_capacity" {
+    description = "Maximum capacity for pilot light environment"
+    type        = number
+    default     = 1
+}
+
+variable "pilot_light_desired_capacity" {
+    description = "Desired capacity for pilot light environment"
+    type        = number
+    default     = 1
+}
+
+variable "common_tags" {
+    description = "Common tags for all resources"
+    type        = map(string)
+    default     = {}
+}
