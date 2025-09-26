@@ -1,21 +1,14 @@
 data "aws_ami" "amazon_linux" {
     most_recent = true
-
-    filter {
+    owners = ["amazon"]
+  filter {
         name   = "name"
-        values = ["al2023-ami-*-x86_64"]
+      values = ["amzn2-ami-hvm-*-x86_64-gp2"]
     }
-
-    filter {
-        name   = "virtualization-type"
-        values = ["hvm"]
-    }
-
-    owners = ["amazon"] # Amazon
 }
 
 # Launch Template
-resource "aws_launch_template" "launch_template" {
+resource "aws_launch_template" "main" {
   name_prefix   = "${var.environment}- ${var.project_name}-lt-"
   description   = "Launch Template for ${var.project_name}"
   image_id      = var.ami_id != "" ? var.ami_id : data.aws_ami.amazon_linux.id
@@ -36,10 +29,9 @@ resource "aws_launch_template" "launch_template" {
 
   block_device_mappings {
     device_name = "/dev/xvda"
-
     ebs {
       volume_size           = var.root_volume_size
-      volume_type           = "gp2"
+      volume_type           = "gp3"
       encrypted             = true
       delete_on_termination = true
 
@@ -53,7 +45,7 @@ resource "aws_launch_template" "launch_template" {
 
         ebs {
             volume_size = var.additional_ebs_volume_size
-            volume_type = "gp2"
+            volume_type = "gp3"
             encrypted   = true
             delete_on_termination = true
         }
@@ -110,6 +102,7 @@ resource "aws_launch_template" "launch_template" {
     }
 }
 
+# Auto Scaling Group
 resource "aws_autoscaling_group" "main" {
   name_prefix         = "${var.environment}-${var.project_name}-asg-"
   max_size            = var.max_size
@@ -120,7 +113,7 @@ resource "aws_autoscaling_group" "main" {
   target_group_arns = var.target_group_arns
 
   launch_template {
-    id      = aws_launch_template.launch_template.id
+    id      = aws_launch_template.main.id
     version = "$Latest"
   }
 
