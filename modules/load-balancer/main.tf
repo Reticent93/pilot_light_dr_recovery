@@ -31,6 +31,45 @@ resource "aws_lb_listener" "main" {
     }
 }
 
+resource "aws_lb_target_group" "api" {
+    name                 = "${replace(var.project_name, "_", "-")}-api-tg"
+    port                 = var.api_target_group_port
+    protocol             = var.target_group_protocol
+    vpc_id               = var.vpc_id
+
+    health_check {
+        enabled             = var.health_check_enabled
+        healthy_threshold   = var.healthy_threshold
+        unhealthy_threshold = var.unhealthy_threshold
+        path                = var.api_health_check_path
+        interval            = var.health_check_interval
+        timeout             = var.health_check_timeout
+        matcher             = var.health_check_matcher
+    }
+
+    tags = merge(var.tags,{
+            Name = "${replace(var.project_name, "_", "-")}-api-tg"
+    })
+}
+
+
+resource "aws_lb_listener_rule" "api" {
+    count        = var.enable_api_routing ? 1 : 0
+    listener_arn = aws_lb_listener.main.arn
+    priority     = var.api_rule_priority
+
+    action {
+        type             = "forward"
+        target_group_arn = aws_lb_target_group.api.arn
+    }
+
+    condition {
+        path_pattern {
+            values = var.api_path_patterns
+        }
+    }
+}
+
 resource "aws_lb_target_group" "main" {
     name                 = "${replace(var.project_name, "_", "-")}-tg"
     port                 = var.target_group_port

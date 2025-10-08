@@ -143,6 +143,36 @@ variable "unhealthy_host_count_threshold" {
     default     = 1
 }
 
+variable "api_target_group_port" {
+    description = "The port for the API target group"
+    type        = number
+    default     = 80
+}
+
+variable "enable_api_routing" {
+    description = "Whether to enable API routing"
+    type        = bool
+    default     = false
+}
+
+variable "api_path_patterns" {
+    description = "List of path patterns for API routing"
+    type        = list(string)
+    default     = ["/api/*"]
+}
+
+variable "api_rule_priority" {
+    description = "Priority for the API listener rule"
+    type        = number
+    default     = 100
+}
+
+variable "api_health_check_path" {
+    description = "The health check path for the API target group"
+    type        = string
+    default     = "/api/health"
+}
+
 # Tags
 variable "tags" {
   description = "A map of tags to assign to the load balancer"
