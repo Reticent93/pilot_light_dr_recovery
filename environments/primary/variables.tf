@@ -6,14 +6,18 @@ variable "project_name" {
 variable "aws_primary_region" {
     description = "AWS region to deploy resources"
     type        = string
-    default     = "us-east-1"
 }
 
 variable "aws_secondary_region" {
     description = "AWS region to deploy resources"
     type        = string
-    default     = "eu-west-1"
 }
+
+variable "environment" {
+    description = "Environment name"
+    type        = string
+}
+
 
 variable "vpc_configs" {
     description = "Configuration for VPC"
@@ -27,9 +31,47 @@ variable "vpc_configs" {
     })
 }
 
-variable "environment" {
-    description = "Environment name (primary, secondary, global)"
-    type        = string
-    default     = "primary"
+variable "asg_config" {
+    description = "Configuration for ASG"
+    type = object({
+        instance_type               = string
+        desired_capacity            = number
+        max_size                    = number
+        min_size                    = number
+        root_volume_size            = number
+        additional_ebs_volume_size  = number
+        associate_public_ip_address = bool
+        detailed_monitoring         = bool
+    })
+}
+
+variable "alb_config" {
+    description = "Configuration for ALB"
+    type = object({
+        name                        = string
+        internal                    = bool
+        load_balancer_type          = string
+        enable_deletion_protection  = bool
+        target_group_port           = number
+        listener_port               = number
+        health_check_path           = string
+        enable_cloudwatch_alarms    = bool
+    })
+}
+
+variable "monitoring_config" {
+    description = "Configuration for monitoring and logging"
+    type = object({
+        enable_cloudwatch_alarms       = bool
+        unhealthy_host_count_threshold = number
+        response_time_threshold        = number
+        enable_access_logs             = bool
+    })
+}
+
+
+variable "common_tags" {
+    description = "Tags for resources"
+    type        = map(string)
 }
 

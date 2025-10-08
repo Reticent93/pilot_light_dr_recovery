@@ -13,8 +13,8 @@ variable "environment" {
     type        = string
 }
 
-variable "allowed_cidr_blocks" {
-  description = "List of CIDR blocks allowed for SSH access"
-    type        = list(string)
-  default     = ["10.0.0.0/8"]
+variable "tags" {
+    description = "A map of tags to assign to resources"
+    type        = map(string)
+    default     = {}
 }

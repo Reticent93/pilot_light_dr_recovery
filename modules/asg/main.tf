@@ -9,7 +9,7 @@ data "aws_ami" "amazon_linux" {
 
 # Launch Template
 resource "aws_launch_template" "main" {
-  name_prefix   = "${var.environment}- ${var.project_name}-lt-"
+  name_prefix   = "${var.environment}-${var.project_name}-lt"
   description   = "Launch Template for ${var.project_name}"
   image_id      = var.ami_id != "" ? var.ami_id : data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
@@ -20,12 +20,12 @@ resource "aws_launch_template" "main" {
     name = var.iam_instance_profile
   }
 
-  user_data = base64encode(templatefile("${path.module}/user_data.sh", {
-    environment = var.environment
-    project_name = var.project_name
-    region = var.aws_region
-    s3_bucket = var.s3_bucket_name
-  }))
+  # user_data = base64encode(templatefile("${path.module}/user_data.sh", {
+  #   environment = var.environment
+  #   project_name = var.project_name
+  #   region = var.aws_region
+  #   s3_bucket = var.s3_bucket_name
+  # }))
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -39,7 +39,7 @@ resource "aws_launch_template" "main" {
   }
 
   dynamic "block_device_mappings" {
-    for_each = var.additional_ebs_volume_size > [1]
+    for_each = var.additional_ebs_volume_size > 0 ? [1] : []
     content {
         device_name = "/dev/xvdf"
 
@@ -89,17 +89,14 @@ resource "aws_launch_template" "main" {
         })
     }
 
-  tag_specifications {
-    resource_type = "launch-template"
+  tags = merge(var.common_tags, {
+    Name        = "${var.environment}-${var.project_name}-lt"
+    Environment = var.environment
+  })
 
-    tags = merge(var.common_tags, {
-      Name        = "${var.environment}-${var.project_name}-lt"
-      Environment = var.environment
-    })
+  lifecycle {
+    create_before_destroy = true
   }
-    lifecycle {
-      create_before_destroy = true
-    }
 }
 
 # Auto Scaling Group
@@ -126,7 +123,6 @@ resource "aws_autoscaling_group" "main" {
     triggers = ["desired_capacity"]
   }
 
-  availability_zones = var.availability_zones
   termination_policies = var.termination_policies
 
   health_check_grace_period = 300
@@ -172,7 +168,7 @@ resource "aws_autoscaling_group" "main" {
 
     lifecycle {
         create_before_destroy = true
-        ignore_changes = [destroy_capacity]
+        ignore_changes = [desired_capacity]
     }
 }
 

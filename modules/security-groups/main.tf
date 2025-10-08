@@ -1,7 +1,7 @@
 resource "aws_security_group" "alb" {
-  name        = "${var.environment}-alb-sg"
+  name        = "${var.project_name}-alb-sg"
   description = "Security group for the ALB"
-    vpc_id      = var.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "HTTP"
@@ -36,7 +36,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_security_group" "app_tier" {
-  name        = "${var.environment}-app-tier-sg"
+  name        = "${var.project_name}-app-tier-sg"
   description = "Security group for the application tier"
   vpc_id      = var.vpc_id
 
@@ -61,4 +61,6 @@ resource "aws_security_group" "app_tier" {
         Project = var.project_name
     }
 }
+
+
 
