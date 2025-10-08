@@ -80,6 +80,24 @@ variable "health_check_path" {
   default     = "/health"
 }
 
+variable "health_check_interval" {
+  description = "The approximate amount of time, in seconds, between health checks of an individual target"
+  type        = number
+  default     = 30
+}
+
+variable "health_check_timeout" {
+  description = "The amount of time, in seconds, during which no response means a failed health check"
+  type        = number
+  default     = 5
+}
+
+variable "health_check_matcher" {
+  description = "The HTTP codes to use when checking for a successful response from a target"
+  type        = string
+  default     = "200"
+}
+
 # Listener Configuration
 variable "listener_port" {
     description = "The port for the load balancer listener"
