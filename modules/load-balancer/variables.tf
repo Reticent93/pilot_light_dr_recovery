@@ -173,9 +173,28 @@ variable "api_health_check_path" {
     default     = "/api/health"
 }
 
+variable "enable_https" {
+    description = "Whether to enable HTTPS listener with SSL certificate"
+    type        = bool
+    default     = false
+}
+
+variable "ssl_certificate_arn" {
+  description = "ARN of the SSL certificate for HTTPS listener (required if enable_https is true)"
+  type        = string
+  default     = ""
+}
+
+variable "ssl_policy" {
+    description = "The SSL policy for the HTTPS listener"
+    type        = string
+    default     = "ELBSecurityPolicy-TLS-1-2-2017-01"
+}
+
 # Tags
 variable "tags" {
   description = "A map of tags to assign to the load balancer"
   type        = map(string)
   default     = {}
 }
+

@@ -27,6 +27,7 @@ module "load_balancer" {
     subnet_ids = module.vpc.public_subnet_ids
     security_group_ids = [module.security_groups.alb_sg_id]
     vpc_id = module.vpc.vpc_id
+    enable_https = false
 }
 
 module "asg" {
