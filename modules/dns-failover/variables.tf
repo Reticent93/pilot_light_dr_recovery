@@ -3,6 +3,11 @@ variable "project_name" {
     type        = string
 }
 
+variable "aws_region" {
+    description = "AWS region to deploy resources"
+    type        = string
+}
+
 variable "primary_alb_dns_name" {
     description = "DNS name of the primary ALB to monitor"
     type        = string

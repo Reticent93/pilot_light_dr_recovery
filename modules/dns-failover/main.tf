@@ -25,8 +25,6 @@ resource "aws_route53_record" "primary" {
   zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "A"
-
-
   set_identifier = "primary"
 
   alias {
@@ -47,7 +45,6 @@ resource "aws_route53_record" "secondary" {
   zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "A"
-
   set_identifier = "secondary"
 
   alias {
@@ -77,4 +74,45 @@ resource "aws_cloudwatch_metric_alarm" "primary_alb_unhealthy_hosts" {
     }
 
    alarm_actions = [var.sns_topics_arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "primary_health_failed" {
+  alarm_name          = "${var.project_name}-primary-health-failed"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+    metric_name         = "HealthCheckStatus"
+    namespace           = "AWS/Route53"
+    period              = 60
+    statistic           = "Minimum"
+    threshold           = 1
+    treat_missing_data = "breaching"
+    alarm_description = "Primary region health check failed - failover triggered"
+
+    dimensions = {
+        HealthCheckId = aws_route53_health_check.primary.id
+    }
+}
+
+resource "aws_cloudwatch_dashboard" "dns_failover_status" {
+  dashboard_name = "${var.project_name}-dns-failover-status"
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type = "metric"
+        x = 0
+        y = 0
+        width = 12
+        height = 6
+        properties = {
+          metrics = [
+            ["AWS/Route53", "HealthCheckStatus", "HealthCheckId", aws_route53_health_check.primary.id]
+          ]
+          title = "Route 53 health checks"
+          region = var.aws_region
+          stat = "Minimum"
+          period = 60
+        }
+      }
+    ]
+  })
 }
