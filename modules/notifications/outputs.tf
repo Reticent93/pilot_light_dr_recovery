@@ -1,4 +1,9 @@
-output "instance_public_ip" {
-  value = ""                                          # The actual value to be outputted
-  description = "The public IP address of the EC2 instance" # Description of what this output represents
+output "topic_arn" {
+  description = "ARN of the SNS topic"
+  value       = aws_sns_topic.alerts.arn
+}
+
+output "topic_name" {
+  description = "Name of the SNS topic"
+  value       = aws_sns_topic.alerts.name
 }

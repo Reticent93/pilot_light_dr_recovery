@@ -1,4 +1,24 @@
-output "aws_dynamodb_table_name" {
-  value = aws_dynamodb_table.main.id                                         # The actual value to be outputted
-  description = "The public IP address of the EC2 instance" # Description of what this output represents
+output "table_name" {
+  description = "Name of the DynamoDB table"
+  value       = aws_dynamodb_table.main.name
+}
+
+output "table_arn" {
+  description = "ARN of the DynamoDB table"
+  value       = aws_dynamodb_table.main.arn
+}
+
+output "table_id" {
+  description = "ID of the DynamoDB table"
+  value       = aws_dynamodb_table.main.id
+}
+
+output "stream_arn" {
+  description = "ARN of the DynamoDB stream"
+  value       = aws_dynamodb_table.main.stream_arn
+}
+
+output "stream_label" {
+  description = "Label of the DynamoDB stream"
+  value       = aws_dynamodb_table.main.stream_label
 }

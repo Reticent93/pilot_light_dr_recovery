@@ -1,3 +1,4 @@
+# CloudWatch Dashboard
 resource "aws_cloudwatch_dashboard" "main" {
   dashboard_name = "${var.project_name}-${var.environment}"
 
@@ -12,14 +13,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/ApplicationELB", "HealthyHostCount", {
-              dimensions = { LoadBalancer = var.alb_arn_suffix }
-              label      = "Healthy"
-            }],
-            [".", "UnHealthyHostCount", {
-              dimensions = { LoadBalancer = var.alb_arn_suffix }
-              label      = "Unhealthy"
-            }]
+            ["AWS/ApplicationELB", "HealthyHostCount", "LoadBalancer", var.alb_arn_suffix, { label = "Healthy" }],
+            [".", "UnHealthyHostCount", ".", ".", { label = "Unhealthy" }]
           ]
           period = 60
           stat   = "Average"
@@ -36,12 +31,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/AutoScaling", "GroupDesiredCapacity", {
-              dimensions = { AutoScalingGroupName = var.asg_name }
-            }],
-            [".", "GroupInServiceInstances", {
-              dimensions = { AutoScalingGroupName = var.asg_name }
-            }]
+            ["AWS/AutoScaling", "GroupDesiredCapacity", "AutoScalingGroupName", var.asg_name, { label = "Desired" }],
+            [".", "GroupInServiceInstances", ".", ".", { label = "In Service" }]
           ]
           period = 60
           stat   = "Average"
@@ -58,9 +49,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/ApplicationELB", "TargetResponseTime", {
-              dimensions = { LoadBalancer = var.alb_arn_suffix }
-            }]
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix]
           ]
           period = 60
           stat   = "Average"
@@ -77,9 +66,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/EC2", "CPUUtilization", {
-              dimensions = { AutoScalingGroupName = var.asg_name }
-            }]
+            ["AWS/EC2", "CPUUtilization", "AutoScalingGroupName", var.asg_name]
           ]
           period = 300
           stat   = "Average"
@@ -162,5 +149,36 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_throttled" {
   tags = merge(var.common_tags, {
     Name = "${var.project_name}-${var.environment}-dynamodb-throttled"
     Type = "Performance"
+  })
+}
+
+
+# This CRITICAL alarm triggers the DR Failover (ALARM state) and Failback (OK state).
+resource "aws_cloudwatch_metric_alarm" "alb_critical_failure" {
+  alarm_name          = "${var.project_name}-${var.environment}-alb-critical-failure"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "HealthyHostCount"
+  namespace           = "AWS/ApplicationELB"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 1
+  alarm_description   = "CRITICAL: Primary ALB has no healthy hosts - triggers DR failover"
+  treat_missing_data  = "breaching"
+
+  dimensions = {
+    LoadBalancer = var.alb_arn_suffix
+  }
+
+  # Failover Action: NOW ONLY TARGETS SNS TOPIC. The SNS topic will invoke the Lambda.
+  alarm_actions = var.sns_topic_arns
+
+  # Failback Action: NOW ONLY TARGETS SNS TOPIC. The SNS topic will invoke the Lambda.
+  ok_actions    = var.sns_topic_arns
+
+  tags = merge(var.common_tags, {
+    Name     = "${var.project_name}-${var.environment}-alb-critical-failure"
+    Severity = "CRITICAL"
+    Triggers = "DR-Failover/Failback"
   })
 }

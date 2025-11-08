@@ -47,7 +47,7 @@ variable "enable_deletion_protection" {
 variable "target_group_port" {
     description = "The port for the target group"
     type        = number
-    default     = 80
+    default     = 8080
 }
 
 variable "target_group_protocol" {
@@ -77,7 +77,7 @@ variable "unhealthy_threshold" {
 variable "health_check_path" {
   description = "The health check path for the target group"
   type        = string
-  default     = "/health"
+  default     = "/"
 }
 
 variable "health_check_interval" {
@@ -95,14 +95,14 @@ variable "health_check_timeout" {
 variable "health_check_matcher" {
   description = "The HTTP codes to use when checking for a successful response from a target"
   type        = string
-  default     = "200"
+  default     = "200-399"
 }
 
 # Listener Configuration
 variable "listener_port" {
     description = "The port for the load balancer listener"
     type        = number
-    default     = 80
+    default     = 8080
 }
 
 variable "listener_protocol" {
@@ -111,11 +111,10 @@ variable "listener_protocol" {
   default     = "HTTP"
 }
 
-
-variable "access_logs_bucket" {
+variable "access_logs_bucket_name" {
   description = "The S3 bucket to store access logs (required if access_logs_enabled is true)"
   type        = string
-  default     = ""
+  default     = "pilot-light-dr-recovery-logs"
 }
 
 # Monitoring and Alarms

@@ -7,13 +7,7 @@ resource "aws_lb" "main" {
 
     enable_deletion_protection = var.enable_deletion_protection
 
-    dynamic "access_logs" {
-        for_each = var.enable_access_logs ? [1] : []
-        content {
-            bucket  = var.access_logs_bucket
-            enabled = var.enable_access_logs
-        }
-    }
+
 
     tags = {
         Name = "${replace(var.project_name, "_", "-")}-lb"
@@ -70,21 +64,7 @@ resource "aws_lb_listener_rule" "api" {
     }
 }
 
-resource "aws_lb_listener" "http" {
-    load_balancer_arn = aws_lb.main.arn
-    port         = 80
-    protocol     = "HTTP"
 
-    default_action {
-        type = "redirect"
-        redirect {
-            port        = "443"
-            protocol    = "HTTPS"
-            status_code = "HTTP_301"
-        }
-    }
-
-}
 
 
 resource "aws_lb_listener" "https" {

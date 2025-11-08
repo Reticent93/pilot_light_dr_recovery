@@ -16,3 +16,8 @@ output "alarm_names" {
     aws_cloudwatch_metric_alarm.dynamodb_throttled.alarm_name
   ]
 }
+
+output "critical_alarm_name" {
+  description = "Name of the critical alarm that triggers DR failover"
+  value       = aws_cloudwatch_metric_alarm.alb_critical_failure.alarm_name
+}

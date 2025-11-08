@@ -1,5 +1,39 @@
-variable "instance_type" {
-  type = string                     # The type of the variable, in this case a string
-  default = "t2.micro"                 # Default value for the variable
-  description = "The type of EC2 instance" # Description of what this variable represents
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
 }
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "email_endpoints" {
+  description = "List of email addresses for notifications"
+  type        = list(string)
+  default     = []
+}
+
+variable "common_tags" {
+  description = "Common tags"
+  type        = map(string)
+  default     = {}
+}
+
+variable "failover_lambda_arn" {
+  description = "The ARN of the Lambda function created in the automation module that needs to be subscribed to the primary alerts topic."
+  type        = string
+}
+
+
+variable "failover_lambda_name" {
+    description = "The name of the Lambda function created in the automation module that needs to be subscribed to the primary alerts topic."
+    type        = string
+}
+
+variable "sns_topic_arn" {
+  description = "SNS topic ARN for notifications"
+  type        = string
+
+}
+

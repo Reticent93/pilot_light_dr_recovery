@@ -3,7 +3,7 @@ data "aws_ami" "amazon_linux" {
     owners = ["amazon"]
   filter {
         name   = "name"
-      values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+      values = ["al2023-ami-*-x86_64"]
     }
 }
 
@@ -20,12 +20,16 @@ resource "aws_launch_template" "main" {
     name = var.iam_instance_profile
   }
 
-  # user_data = base64encode(templatefile("${path.module}/user_data.sh", {
-  #   environment = var.environment
-  #   project_name = var.project_name
-  #   region = var.aws_region
-  #   s3_bucket = var.s3_bucket_name
-  # }))
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    systemctl enable httpd
+    echo "OK" > /var/www/html/health
+    echo "<h1>Primary Region - Instance $(curl -s http://169.254.169.254/latest/meta-data/instance-id)</h1>" > /var/www/html/index.html
+    EOF
+  )
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -125,7 +129,7 @@ resource "aws_autoscaling_group" "main" {
 
   termination_policies = var.termination_policies
 
-  health_check_grace_period = 300
+  health_check_grace_period = 600
   health_check_type         = "ELB"
 
   enabled_metrics = [

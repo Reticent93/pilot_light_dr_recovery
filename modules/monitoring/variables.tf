@@ -40,6 +40,11 @@ variable "sns_topic_arns" {
   default     = []
 }
 
+variable "lambda_failover_arn" {
+    description = "ARN of the Lambda function for failover"
+    type        = string
+}
+
 variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)

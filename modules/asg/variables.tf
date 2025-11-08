@@ -83,7 +83,7 @@ variable "kms_key_id" {
 variable "min_size" {
     description = "Minimum size of the Auto Scaling group"
     type        = number
-    default     = 1
+    default     = 0
 }
 
 variable "max_size" {
@@ -95,7 +95,7 @@ variable "max_size" {
 variable "desired_capacity" {
     description = "Desired capacity of the Auto Scaling group"
     type        = number
-    default     = 1
+    default     = 0
 }
 
 variable "subnet_ids" {

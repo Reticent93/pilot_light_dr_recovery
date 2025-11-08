@@ -1,32 +1,57 @@
-# environments/global/variables.tf
-
 variable "project_name" {
-    description = "Name of the project"
-    type        = string
+  description = "Name of the project"
+  type        = string
+  default     = "pilot-light-dr-recovery"
 }
 
-variable "domain_name" {
-    description = "Domain name for the application"
-    type        = string
+variable "aws_primary_region" {
+  description = "AWS region for global resources"
+  type        = string
+  default     = "us-east-1"
 }
 
-
-variable "primary_alb_dns_name" {
-    description = "DNS name of primary region ALB"
-    type        = string
+variable "aws_secondary_region" {
+  description = "AWS secondary region"
+  type        = string
+  default     = "eu-west-1"
 }
 
-variable "primary_alb_zone_id" {
-    description = "Zone ID of primary region ALB"
-    type        = string
+variable "enable_automation" {
+  description = "Enable automation module (set to true after secondary region is deployed)"
+  type        = bool
+  default     = false
 }
 
-variable "secondary_alb_dns_name" {
-    description = "DNS name of secondary region ALB"
-    type        = string
+variable "secondary_asg_name" {
+  description = "Name of the secondary region ASG"
+  type        = string
+  default     = "" # Will be populated after secondary region is deployed
 }
 
-variable "secondary_alb_zone_id" {
-    description = "Zone ID of secondary region ALB"
+variable "sns_topic_arn" {
+  description = "ARN of SNS topic for notifications"
+  type        = string
+  default     = ""
+}
+
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Project     = "pilot-light-dr-recovery"
+    ManagedBy   = "terraform"
+    Environment = "global"
+  }
+}
+
+variable "failover_lambda_arn" {
+    description = "ARN of the failover Lambda function"
     type        = string
+    default     = ""
+}
+
+variable "primary_alb_alarm_name" {
+    description = "Name of the primary ALB CloudWatch alarm"
+    type        = string
+
 }

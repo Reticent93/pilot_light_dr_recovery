@@ -3,13 +3,19 @@ variable "project_name" {
     type        = string
 }
 
-variable "dr_region" {
-    description = "AWS region"
+variable "environment" {
+    description = "Environment name"
+    type        = string
+    default     = "global"
+}
+
+variable "aws_secondary_region" {
+    description = "AWS secondary region for DynamoDB replica"
     type        = string
 }
 
-variable "environment" {
-    description = "Deployment environment (primary/secondary)"
-    type        = string
-    default     = "dev"
+variable "common_tags" {
+    description = "Common tags to apply to all resources"
+    type        = map(string)
+    default     = {}
 }

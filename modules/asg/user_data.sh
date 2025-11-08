@@ -20,6 +20,6 @@ EOF
 
 # Start web server for health checks
 cd /var/www/html
-nohup python3 -m http.server 80 > /var/log/webserver.log 2>&1 &
+nohup python3 -m http.server 8080 > /var/log/webserver.log 2>&1 &
 
 echo "Instance ready" > /var/log/user-data-complete.log
