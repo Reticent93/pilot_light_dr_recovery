@@ -16,10 +16,16 @@ resource "aws_lambda_function" "failover" {
 
   environment {
     variables = {
+      PRIMARY_REGION      = var.primary_region
+      PRIMARY_ASG_NAME    = var.primary_asg_name
+      TARGET_GROUP_ARN    = var.primary_tg_arn
       SECONDARY_REGION    = var.secondary_region
       SECONDARY_ASG_NAME  = var.secondary_asg_name
+      PRIMARY_EIP_ALLOCATION_ID = var.primary_eip_allocation_id
+      EIP_ALLOCATION_ID   = var.secondary_eip_allocation_id
       DESIRED_CAPACITY    = var.failover_desired_capacity
       SNS_TOPIC_ARN      = var.sns_topic_arn
+      CLOUDWATCH_ALARM_NAME = var.primary_alb_alarm_name
     }
   }
 

@@ -37,3 +37,8 @@ output "private_route_table_id" {
   description = "ID of the private route table"
   value       = aws_route_table.private.id
 }
+
+output "ec2_eip_allocation_id" {
+  description = "The Allocation ID of the static EIP reserved for the EC2/Bastion instance."
+  value       = aws_eip.ec2.id
+}

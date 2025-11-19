@@ -14,7 +14,7 @@ variable "read_secondary_state" {
 
 # Get secondary region ASG name from remote state (only after secondary is deployed)
 data "terraform_remote_state" "secondary" {
-  count = var.enable_automation && var.read_secondary_state ? 1 : 0
+  count = var.read_secondary_state ? 1 : 0
 
   backend = "s3"
   config = {
@@ -24,12 +24,28 @@ data "terraform_remote_state" "secondary" {
   }
 }
 
+data "aws_eip" "primary_web_eip" {
+  provider = aws.primary
+    tags = {
+        Name = "pilot-light-dr-recovery-ec2-eip"
+    }
+}
+
+data "aws_eip" "secondary_web_eip" {
+  provider = aws.secondary
+  tags = {
+    Name = "pilot-light-dr-recovery-ec2-eip"
+  }
+}
+
+
 module "iam" {
   source = "../../modules/iam"
   project_name = var.project_name
   s3_replication_source_bucket_name = "pilot-light-dr-recovery-primary-app-data"
   s3_replication_destination_bucket_arn = "${var.project_name}-secondary-app-data"
   sns_topic_arn = var.sns_topic_arn
+  aws_eip = var.aws_eip
 }
 
 module "automation" {
@@ -49,6 +65,11 @@ module "automation" {
 
   common_tags = var.common_tags
   lambda_failover_role_arn = module.iam.lambda_failover_role_arn
+  primary_eip_allocation_id = data.aws_eip.primary_web_eip.id
+  secondary_eip_allocation_id = data.aws_eip.secondary_web_eip.id
+  primary_asg_name = var.primary_asg_name
+  primary_region = var.aws_primary_region
+  primary_tg_arn = var.primary_tg_arn
 }
 
 

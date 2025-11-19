@@ -36,7 +36,12 @@ data "aws_dynamodb_table" "main" {
 
 data "aws_iam_role" "ec2_role" {
   name = "pilot-light-dr-recovery-ec2-role"
+}
 
+data "aws_eip" "secondary_web_eip" {
+    tags = {
+        Name = "pilot-light-dr-recovery-ec2-eip"
+    }
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
@@ -56,10 +61,10 @@ resource "aws_s3_object" "dr_folders" {
     "secondary-region/temp/"
   ])
 
-  bucket        = data.aws_s3_bucket.logs.id
-  key           = each.value
-  content       = ""
-  content_type  = "application/x-directory"
+  bucket       = data.aws_s3_bucket.logs.id
+  key          = each.value
+  content      = ""
+  content_type = "application/x-directory"
 
   tags = {
     Purpose   = "disaster-recovery"
@@ -80,14 +85,12 @@ module "security_groups" {
 module "load_balancer" {
   source = "../../modules/load-balancer"
 
-  project_name            = var.project_name
-  name                    = "${var.project_name}-${var.environment}-alb"
-  subnet_ids              = module.vpc.public_subnet_ids
-  security_group_ids      = [module.security_groups.alb_sg_id]
-  enable_access_logs      = true
-  vpc_id                  = module.vpc.vpc_id
-  access_logs_bucket_name = data.aws_s3_bucket.logs.id
-  tags                    = var.common_tags
+  project_name       = var.project_name
+  name               = "${var.project_name}-${var.environment}-alb"
+  subnet_ids         = module.vpc.public_subnet_ids
+  security_group_ids = [module.security_groups.alb_sg_id]
+  vpc_id             = module.vpc.vpc_id
+  tags               = var.common_tags
 
 
 }
@@ -111,5 +114,6 @@ module "asg" {
   detailed_monitoring        = var.asg_config.detailed_monitoring
   target_group_arns          = [module.load_balancer.target_group_arn]
   ami_id                     = ""
+  eip_allocation_id          = data.aws_eip.secondary_web_eip.id
 }
 

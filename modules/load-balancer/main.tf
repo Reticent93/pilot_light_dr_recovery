@@ -103,8 +103,12 @@ resource "aws_lb_target_group" "main" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "unhealthy_hosts" {
-    count               = var.enable_cloudwatch_alarms ? 1 : 0
-    alarm_name          = "${var.name}-unhealthy-hosts"
+
+    for_each = {
+        main = aws_lb_target_group.main.arn,
+        api  = aws_lb_target_group.api.arn,
+    }
+    alarm_name          = "${var.name}-${each.key}-unhealthy-hosts"
     comparison_operator = "GreaterThanOrEqualToThreshold"
     evaluation_periods  = 2
     metric_name         = "UnHealthyHostCount"
@@ -112,6 +116,13 @@ resource "aws_cloudwatch_metric_alarm" "unhealthy_hosts" {
     period              = 60
     statistic           = "Average"
     threshold           = var.unhealthy_host_count_threshold
+
+    dimensions = {
+        # LoadBalancer dimension requires the Load Balancer ARN Suffix
+        LoadBalancer = aws_lb.main.arn_suffix
+        # TargetGroup dimension requires the Target Group ARN
+        TargetGroup  = each.value
+    }
 
 
     alarm_actions = [var.sns_topic_arn]

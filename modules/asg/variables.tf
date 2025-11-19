@@ -83,7 +83,7 @@ variable "kms_key_id" {
 variable "min_size" {
     description = "Minimum size of the Auto Scaling group"
     type        = number
-    default     = 0
+    default     = 2
 }
 
 variable "max_size" {
@@ -95,18 +95,12 @@ variable "max_size" {
 variable "desired_capacity" {
     description = "Desired capacity of the Auto Scaling group"
     type        = number
-    default     = 0
+    default     = 3
 }
 
 variable "subnet_ids" {
     description = "Subnet IDs for the Auto Scaling group"
     type        = list(string)
-}
-
-variable "availability_zones" {
-    description = "Availability zones for ASG"
-    type        = list(string)
-    default     = []
 }
 
 variable "target_group_arns" {
@@ -274,4 +268,9 @@ variable "common_tags" {
     description = "Common tags for all resources"
     type        = map(string)
     default     = {}
+}
+
+variable "eip_allocation_id" {
+    description = "The Allocation ID of the static EIP to be associated by the instance user data."
+    type        = string
 }

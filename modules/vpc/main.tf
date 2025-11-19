@@ -71,6 +71,14 @@ resource "aws_nat_gateway" "main" {
   depends_on = [aws_internet_gateway.main]
 }
 
+resource "aws_eip" "ec2" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "${var.project_name}-ec2-eip"
+    Environment = var.environment
+  }
+}
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.primary.id

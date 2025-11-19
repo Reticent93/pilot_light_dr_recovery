@@ -42,8 +42,8 @@ resource "aws_security_group" "app_tier" {
 
     ingress {
         description = "HTTP"
-        from_port   = 8080
-        to_port     = 8080
+        from_port   = 80
+        to_port     = 80
         protocol    = "tcp"
         security_groups = [aws_security_group.alb.id]
     }
@@ -62,5 +62,34 @@ resource "aws_security_group" "app_tier" {
     }
 }
 
+resource "aws_security_group" "ec2_sg" {
+  name        = "${var.project_name}-ssh-sg"
+  description = "Allow SSH inbound traffic"
+  vpc_id      = var.vpc_id
+
+
+  ingress {
+    description = "SSH from everywhere (or restrict to your IP)"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    # NOTE: It's best practice to replace "0.0.0.0/0" with your specific IP address.
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.project_name}-ssh-sg"
+    Environment = var.environment
+    Project     = var.project_name
+  }
+}
 
 

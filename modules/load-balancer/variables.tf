@@ -47,7 +47,7 @@ variable "enable_deletion_protection" {
 variable "target_group_port" {
     description = "The port for the target group"
     type        = number
-    default     = 8080
+    default     = 80
 }
 
 variable "target_group_protocol" {
@@ -77,7 +77,7 @@ variable "unhealthy_threshold" {
 variable "health_check_path" {
   description = "The health check path for the target group"
   type        = string
-  default     = "/"
+  default     = "/health"
 }
 
 variable "health_check_interval" {
@@ -102,32 +102,13 @@ variable "health_check_matcher" {
 variable "listener_port" {
     description = "The port for the load balancer listener"
     type        = number
-    default     = 8080
+    default     = 80
 }
 
 variable "listener_protocol" {
   description = "The protocol for the load balancer listener (HTTP, HTTPS, TCP, etc.)"
   type        = string
   default     = "HTTP"
-}
-
-variable "access_logs_bucket_name" {
-  description = "The S3 bucket to store access logs (required if access_logs_enabled is true)"
-  type        = string
-  default     = "pilot-light-dr-recovery-logs"
-}
-
-# Monitoring and Alarms
-variable "enable_cloudwatch_alarms" {
-  description = "Whether to enable CloudWatch alarms for the load balancer"
-  type        = bool
-  default     = true
-}
-
-variable "enable_access_logs" {
-    description = "Whether to enable access logs for the load balancer"
-    type        = bool
-    default     = true
 }
 
 variable "sns_topic_arn" {
@@ -157,7 +138,7 @@ variable "enable_api_routing" {
 variable "api_path_patterns" {
     description = "List of path patterns for API routing"
     type        = list(string)
-    default     = ["/api/*"]
+    default     = ["/*"]
 }
 
 variable "api_rule_priority" {
@@ -169,7 +150,7 @@ variable "api_rule_priority" {
 variable "api_health_check_path" {
     description = "The health check path for the API target group"
     type        = string
-    default     = "/api/health"
+    default     = "/health"
 }
 
 variable "enable_https" {

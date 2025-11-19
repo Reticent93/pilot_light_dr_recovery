@@ -145,6 +145,26 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
   )
 }
 
+resource "aws_iam_role_policy" "eip_association" {
+  name = "${var.project_name}-eip-association-policy"
+  role   = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:AssociateAddress",
+          "ec2:DescribeAddresses",
+          "ec2:DescribeInstances"
+        ]
+        Resource = "*"
+      }
+    ]
+
+  })
+}
+
 
 
 # S3 Replication
@@ -246,6 +266,9 @@ resource "aws_iam_role_policy" "lambda_failover_policy" {
           "autoscaling:SetDesiredCapacity",
           "autoscaling:UpdateAutoScalingGroup",
           "cloudwatch:PutMetricData",
+          "elasticloadbalancing:DescribeTargetHealth",
+          "elasticloadbalancing:DescribeTargetGroups",
+          "sts:GetCallerIdentity"
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -279,7 +302,28 @@ resource "aws_iam_role_policy" "lambda_failover_policy" {
         ]
         Effect = "Allow"
         Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Action = [
+          "ec2:AssociateAddress",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        "Action": [
+          "ec2:AssociateAddress",
+          "ec2:DescribeInstances",
+          "ec2:DescribeAddresses"
+        ]
+        "Effect": "Allow",
+        "Resource": "*"
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_core_attachment" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }

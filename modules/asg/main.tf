@@ -22,12 +22,33 @@ resource "aws_launch_template" "main" {
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
-    yum update -y
-    yum install -y httpd
-    systemctl start httpd
+    exec > >(tee /var/log/user-data.log) 2>&1
+    set -x
+
+    # Update and install httpd
+    dnf update -y || { echo "DNF update failed"; exit 1; }
+    dnf install -y httpd || { echo "HTTPD install failed"; exit 1; }
+
+    # Configure httpd
+    sed -i 's/^KeepAliveTimeout 5/KeepAliveTimeout 65/' /etc/httpd/conf/httpd.conf
+
+    # Start and enable httpd
+    systemctl start httpd || { echo "HTTPD start failed"; exit 1; }
     systemctl enable httpd
+
+    # Wait for httpd to be active
+    timeout 60 bash -c 'until systemctl is-active httpd; do sleep 5; done' || { echo "HTTPD did not start in time"; exit 1; }
+
+    # Create web content
     echo "OK" > /var/www/html/health
     echo "<h1>Primary Region - Instance $(curl -s http://169.254.169.254/latest/meta-data/instance-id)</h1>" > /var/www/html/index.html
+
+    # Associate EIP
+    INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+    ALLOCATION_ID="${var.eip_allocation_id}"
+    /usr/bin/aws ec2 associate-address --instance-id $INSTANCE_ID --allocation-id $ALLOCATION_ID --allow-reassociation || echo "EIP association failed"
+
+    echo "User data script completed successfully"
     EOF
   )
 
@@ -176,3 +197,13 @@ resource "aws_autoscaling_group" "main" {
     }
 }
 
+resource "aws_eip" "dr_bastion_eip" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "${var.project_name}-dr-bastion-eip"
+    Environment = var.environment
+    # Add a tag to easily identify the purpose of this static EIP
+    Purpose     = "ASG-Bastion-Host-Access"
+  }
+}

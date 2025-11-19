@@ -7,7 +7,11 @@ variable "project_name" {
 variable "aws_primary_region" {
   description = "AWS region for global resources"
   type        = string
-  default     = "us-east-1"
+}
+
+variable "secondary_eip_allocation_id" {
+  description = "Allocation ID of the Elastic IP used for traffic failover."
+  type        = string
 }
 
 variable "aws_secondary_region" {
@@ -34,6 +38,18 @@ variable "sns_topic_arn" {
   default     = ""
 }
 
+variable "aws_eip" {
+  description = "Allocate and associate an Elastic IP address"
+  type        = bool
+  default     = true
+}
+
+variable "primary_asg_name" {
+    description = "Name of the primary region ASG"
+    type        = string
+    default     = ""
+}
+
 variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
@@ -54,4 +70,9 @@ variable "primary_alb_alarm_name" {
     description = "Name of the primary ALB CloudWatch alarm"
     type        = string
 
+}
+
+variable "primary_tg_arn" {
+  description = "ARN of the primary region target group."
+  type        = string
 }

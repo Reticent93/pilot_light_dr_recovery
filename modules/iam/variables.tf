@@ -35,3 +35,5 @@ variable "sns_topic_arn" {
   description = "The ARN of the SNS topic the Lambda function is allowed to publish to."
   type        = string
 }
+
+variable "aws_eip" {}

@@ -164,7 +164,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_critical_failure" {
   statistic           = "Average"
   threshold           = 1
   alarm_description   = "CRITICAL: Primary ALB has no healthy hosts - triggers DR failover"
-  treat_missing_data  = "breaching"
+  treat_missing_data  = "notBreaching"
 
   dimensions = {
     LoadBalancer = var.alb_arn_suffix

@@ -1,4 +1,3 @@
-# Existing outputs (if any)
 output "dynamodb_table_arn" {
   description = "ARN of the DynamoDB table"
   value       = module.dynamodb.table_arn
@@ -30,3 +29,14 @@ output "failover_lambda_name" {
   description = "The name of the central DR Failover Orchestration Lambda function."
   value       = module.automation[0].failover_lambda_name
 }
+
+output "instance_profile_name" {
+  description = "Name of the IAM Instance Profile for EC2 instances."
+  value       = module.iam.instance_profile_name
+}
+
+output "instance_profile_arn" {
+  description = "ARN of the IAM Instance Profile for EC2 instances."
+  value       = module.iam.instance_profile_arn
+}
+
