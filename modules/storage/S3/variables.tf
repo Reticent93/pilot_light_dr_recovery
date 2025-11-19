@@ -61,3 +61,10 @@ variable "existing_logs_bucket" {
   type        = string
   default     = ""
 }
+
+
+variable "use_existing_app_data_bucket" {
+  description = "Whether to use an existing App Data S3 bucket"
+  type        = bool
+  default     = false
+}

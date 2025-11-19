@@ -61,6 +61,12 @@ variable "lambda_failover_role_arn" {
     type        = string
 }
 
+variable "enable_failback" {
+    description = "Enable automatic failback when primary recovers"
+    type        = bool
+    default     = false
+}
+
 variable "common_tags" {
     description = "Common tags to apply to resources"
     type        = map(string)

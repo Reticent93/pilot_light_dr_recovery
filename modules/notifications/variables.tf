@@ -25,8 +25,15 @@ variable "failover_lambda_arn" {
   type        = string
 }
 
+
 variable "failover_lambda_name" {
     description = "The name of the Lambda function created in the automation module that needs to be subscribed to the primary alerts topic."
     type        = string
+}
+
+variable "sns_topic_arn" {
+  description = "SNS topic ARN for notifications"
+  type        = string
+
 }
 

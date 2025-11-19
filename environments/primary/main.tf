@@ -142,7 +142,7 @@ module "notifications" {
   email_endpoints = ["greg.renfro93@gmail.com"]
   failover_lambda_arn = data.terraform_remote_state.global.outputs.failover_lambda_arn
   failover_lambda_name = data.terraform_remote_state.global.outputs.failover_lambda_name
-  sns_topic_arn = ""
+  sns_topic_arn = var.sns_topic_arn
 
   common_tags = var.common_tags
 }
