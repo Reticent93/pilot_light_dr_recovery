@@ -1,4 +1,5 @@
 # CloudWatch Dashboard
+# This dashboard focuses on performance metrics only.
 resource "aws_cloudwatch_dashboard" "main" {
   dashboard_name = "${var.project_name}-${var.environment}"
 
@@ -151,7 +152,6 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_throttled" {
     Type = "Performance"
   })
 }
-
 
 # This CRITICAL alarm triggers the DR Failover (ALARM state) and Failback (OK state).
 resource "aws_cloudwatch_metric_alarm" "alb_critical_failure" {

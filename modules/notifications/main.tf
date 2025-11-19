@@ -13,7 +13,6 @@ resource "aws_sns_topic_subscription" "email" {
   endpoint  = var.email_endpoints[count.index]
 }
 
-
 resource "aws_lambda_permission" "allow_sns_topic" {
   statement_id  = "AllowExecutionFromSNSTopic"
   action        = "lambda:InvokeFunction"
@@ -21,7 +20,6 @@ resource "aws_lambda_permission" "allow_sns_topic" {
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.alerts.arn
 }
-
 
 resource "aws_sns_topic_subscription" "failover_trigger" {
   topic_arn = aws_sns_topic.alerts.arn

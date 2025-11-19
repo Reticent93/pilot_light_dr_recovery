@@ -42,7 +42,6 @@ resource "aws_cloudwatch_log_group" "failover_lambda" {
   tags = var.common_tags
 }
 
-
 # EventBridge Rule - Trigger on Alarm State Change
 resource "aws_cloudwatch_event_rule" "primary_unhealthy" {
   name        = "${var.project_name}-primary-unhealthy"

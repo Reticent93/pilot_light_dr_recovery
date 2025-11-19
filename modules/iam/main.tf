@@ -1,4 +1,3 @@
-# IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
   name = "${var.project_name}-ec2-role"
 
@@ -165,8 +164,6 @@ resource "aws_iam_role_policy" "eip_association" {
   })
 }
 
-
-
 # S3 Replication
 data "aws_iam_policy_document" "s3_replication_assume_role" {
   statement {
@@ -218,8 +215,6 @@ resource "aws_iam_role_policy" "s3_replication" {
   policy = data.aws_iam_policy_document.s3_replication_permissions.json
 }
 
-
-
 # IAM Role for Automation Lambda
 resource "aws_iam_role" "lambda_failover_role" {
   name = "${var.project_name}-lambda-failover-role"
@@ -251,12 +246,9 @@ resource "aws_iam_role_policy" "lambda_failover_policy" {
           "kms:Decrypt"
         ]
         Effect   = "Allow"
-        # Since we don't know the exact key ARN here, we use "*" and scope by service.
-        # This allows decryption of any key used by Lambda in the current region.
         Resource = "*"
         Condition = {
           StringEquals = {
-            # Corrected the function name in the ViaService condition
             "kms:ViaService" = "lambda.us-east-1.amazonaws.com"
           }
         }

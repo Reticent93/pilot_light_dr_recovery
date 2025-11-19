@@ -1,4 +1,3 @@
-# Get global resources (DynamoDB, S3 replication role)
 data "terraform_remote_state" "global" {
   backend = "s3"
   config = {
@@ -8,7 +7,6 @@ data "terraform_remote_state" "global" {
   }
 }
 
-# Create secondary region app-data bucket (for replication destination)
 resource "aws_s3_bucket" "secondary_app_data" {
   provider = aws.secondary
   bucket   = "${var.project_name}-secondary-app-data"
@@ -43,9 +41,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "secondary_app_dat
   }
 }
 
-
-
-# Create primary region storage
 module "storage" {
   source = "../../modules/storage/s3"
 

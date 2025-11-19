@@ -73,7 +73,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    # NOTE: It's best practice to replace "0.0.0.0/0" with your specific IP address.
+    # NOTE: Best practice to replace "0.0.0.0/0" with my specific IP address.
     cidr_blocks = ["0.0.0.0/0"]
   }
 

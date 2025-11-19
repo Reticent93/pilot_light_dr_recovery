@@ -50,8 +50,6 @@ variable "common_tags" {
   default     = {}
 }
 
-
-
 variable "existing_app_data_bucket" {
   description = "Name of the existing app-data bucket to use."
   type        = string
@@ -62,22 +60,4 @@ variable "existing_logs_bucket" {
   description = "Name of the existing logs bucket to use."
   type        = string
   default     = ""
-}
-
-variable "logs_bucket_region" {
-  description = "Region of existing logs bucket (if different from primary)"
-  type        = string
-  default     = "us-east-1"
-}
-
-variable "use_existing_app_data_bucket" {
-  description = "Whether to use an existing App Data S3 bucket"
-  type        = bool
-  default     = false
-}
-
-variable "use_existing_logs_bucket" {
-  description = "Whether to use an existing Logs S3 bucket"
-  type        = bool
-  default     = false
 }

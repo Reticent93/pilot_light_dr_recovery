@@ -8,7 +8,6 @@ output "dynamodb_table_name" {
   value       = module.dynamodb.table_name
 }
 
-# S3 Replication Role outputs
 output "s3_replication_role_arn" {
   description = "ARN of the S3 replication IAM role"
   value       = module.iam.s3_replication_role_arn
@@ -24,7 +23,6 @@ output "failover_lambda_arn" {
   value       = module.automation[0].failover_lambda_arn
 }
 
-# Name of the DR Failover Lambda function
 output "failover_lambda_name" {
   description = "The name of the central DR Failover Orchestration Lambda function."
   value       = module.automation[0].failover_lambda_name

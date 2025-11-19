@@ -124,7 +124,6 @@ resource "aws_launch_template" "main" {
   }
 }
 
-# Auto Scaling Group
 resource "aws_autoscaling_group" "main" {
   name_prefix         = "${var.environment}-${var.project_name}-asg-"
   max_size            = var.max_size

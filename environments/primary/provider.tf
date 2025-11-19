@@ -15,7 +15,6 @@ terraform {
   }
 }
 
-# Primary region provider (us-east-1)
 provider "aws" {
   region = var.aws_primary_region
 
@@ -24,7 +23,6 @@ provider "aws" {
   }
 }
 
-# Secondary region provider (eu-west-1) - for creating replica bucket
 provider "aws" {
   alias  = "secondary"
   region = var.aws_secondary_region

@@ -7,8 +7,6 @@ resource "aws_lb" "main" {
 
     enable_deletion_protection = var.enable_deletion_protection
 
-
-
     tags = {
         Name = "${replace(var.project_name, "_", "-")}-lb"
     }
@@ -46,7 +44,6 @@ resource "aws_lb_target_group" "api" {
     })
 }
 
-
 resource "aws_lb_listener_rule" "api" {
     count        = var.enable_api_routing ? 1 : 0
     listener_arn = aws_lb_listener.main.arn
@@ -63,9 +60,6 @@ resource "aws_lb_listener_rule" "api" {
         }
     }
 }
-
-
-
 
 resource "aws_lb_listener" "https" {
     count        = var.enable_https ? 1 : 0
@@ -123,7 +117,6 @@ resource "aws_cloudwatch_metric_alarm" "unhealthy_hosts" {
         # TargetGroup dimension requires the Target Group ARN
         TargetGroup  = each.value
     }
-
 
     alarm_actions = [var.sns_topic_arn]
 }

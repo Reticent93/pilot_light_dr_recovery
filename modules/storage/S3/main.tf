@@ -1,4 +1,3 @@
-
 # --- APP DATA BUCKET ---
 data "aws_s3_bucket" "app_data_existing" {
   count  = var.use_existing_buckets ? 1 : 0

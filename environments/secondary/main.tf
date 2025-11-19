@@ -1,4 +1,3 @@
-# Get global resources (DynamoDB, S3 replication role)
 data "terraform_remote_state" "global" {
   backend = "s3"
   config = {
@@ -21,17 +20,8 @@ module "vpc" {
   availability_zones   = var.vpc_configs.availability_zones
 }
 
-# Reference existing buckets in secondary region
-data "aws_s3_bucket" "app_data" {
-  bucket = "pilot-light-dr-recovery-secondary-app-data"
-}
-
 data "aws_s3_bucket" "logs" {
   bucket = "pilot-light-dr-recovery-logs"
-}
-
-data "aws_dynamodb_table" "main" {
-  name = "pilot-light-dr-recovery-table"
 }
 
 data "aws_iam_role" "ec2_role" {
@@ -39,9 +29,9 @@ data "aws_iam_role" "ec2_role" {
 }
 
 data "aws_eip" "secondary_web_eip" {
-    tags = {
-        Name = "pilot-light-dr-recovery-ec2-eip"
-    }
+  tags = {
+    Name = "pilot-light-dr-recovery-ec2-eip"
+  }
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
@@ -49,7 +39,6 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
   role = data.aws_iam_role.ec2_role.name
 }
 
-# Create DR-specific folder structure in secondary logs bucket
 resource "aws_s3_object" "dr_folders" {
   for_each = toset([
     "secondary-region/dr-snapshots/",

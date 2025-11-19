@@ -18,7 +18,6 @@ variable "environment" {
   type        = string
 }
 
-
 variable "vpc_configs" {
   description = "Configuration for VPC"
   type = object({
@@ -68,8 +67,6 @@ variable "monitoring_config" {
     enable_access_logs             = bool
   })
 }
-
-
 
 variable "common_tags" {
   description = "Tags for resources"

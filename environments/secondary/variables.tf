@@ -6,13 +6,11 @@ variable "project_name" {
 variable "aws_primary_region" {
   description = "AWS region"
   type        = string
-
 }
 
 variable "aws_secondary_region" {
   description = "AWS region"
   type        = string
-
 }
 
 variable "environment" {
@@ -32,7 +30,6 @@ variable "vpc_configs" {
   })
 }
 
-# S3 bucket configuration
 variable "s3_config" {
   description = "Configuration for S3 bucket"
   type = object({
@@ -79,7 +76,6 @@ variable "monitoring_config" {
     enable_access_logs             = bool
   })
 }
-
 
 variable "common_tags" {
   description = "Tags for resources"

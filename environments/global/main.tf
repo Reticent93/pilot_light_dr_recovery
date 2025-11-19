@@ -57,7 +57,7 @@ module "automation" {
   secondary_asg_name        = var.read_secondary_state ? data.terraform_remote_state.secondary[0].outputs.asg_name : ""
   failover_desired_capacity = 2
 
-  # Use ALB alarm instead of Route 53 health check
+  # Using ALB alarm instead of Route 53 health check
   primary_alb_alarm_name = var.primary_alb_alarm_name
 
   sns_topic_arn   = var.sns_topic_arn
