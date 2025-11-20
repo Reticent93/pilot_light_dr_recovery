@@ -6,12 +6,6 @@ A production-ready, automated disaster recovery solution implementing the **Pilo
 ##  📸 Pilot Light Diagram
 <img width="1331" height="851" alt="Disaster_Recovery drawio" src="https://github.com/user-attachments/assets/72ed8f50-19b1-41a9-b41a-06c4bd81ed6e" />
 
-
-## 🧪 Testing & Validation
-<img width="1178" height="416" alt="Failover Test Result" src="https://github.com/user-attachments/assets/2200fa54-c317-497f-af8b-167888dabbe7" />
-<img width="1164" height="408" alt="Failback Test Result" src="https://github.com/user-attachments/assets/c6a0f223-5817-4045-ac3e-dfd5b85d751c" />
-
-
 ## 🏗️ Architecture & Technologies
 - **Primary Region**: us-east-1 | **Secondary Region**: eu-west-1
 - **Infrastructure**: Terraform modules for VPC, ALB, ASG, DynamoDB, S3, Lambda
@@ -94,7 +88,10 @@ cd ../global && terraform apply -var="enable_automation=true"
 - **Performance Testing**: Load testing during failover scenarios
 - **Data Integrity**: Validated cross-region replication consistency
 - **Recovery Time**: Measured and optimized RTO/RPO metrics
-
+  
+<img width="1178" height="416" alt="Failover Test Result" src="https://github.com/user-attachments/assets/2200fa54-c317-497f-af8b-167888dabbe7" />
+<img width="1164" height="408" alt="Failback Test Result" src="https://github.com/user-attachments/assets/c6a0f223-5817-4045-ac3e-dfd5b85d751c" />
+  
 ## 🔧 Project Structure
 ```
 dr_recovery/
