@@ -3,6 +3,15 @@
 ## 🚀 Project Overview
 A production-ready, automated disaster recovery solution implementing the **Pilot Light** strategy across AWS regions using Infrastructure as Code (Terraform). This project demonstrates enterprise-level cloud architecture, automation, and disaster recovery best practices.
 
+// Need to add pictures of the diagram here with symbols
+##  [📸 Solution in Action](#-solution-in-action)
+
+
+
+## [🧪 Testing & Validation](#-testing--validation)
+
+
+
 ## 🏗️ Architecture & Technologies
 - **Primary Region**: us-east-1 | **Secondary Region**: eu-west-1
 - **Infrastructure**: Terraform modules for VPC, ALB, ASG, DynamoDB, S3, Lambda
@@ -62,11 +71,36 @@ cd ../global && terraform apply -var="enable_automation=true"
 - **Cost Savings**: 60-80% reduction vs. warm standby
 - **Availability**: 99.9%+ uptime with cross-region redundancy
 
+## 📸 Solution in Action
+
+### Architecture Overview
+![Architecture Diagram](images/architecture-diagram.png)
+*Multi-region disaster recovery architecture with automated failover*
+
+### Monitoring Dashboard
+![CloudWatch Dashboard](images/cloudwatch-dashboard.png)
+*Real-time monitoring of primary and secondary regions*
+
+### Automated Failover Testing
+![Failover Process](images/failover-test.png)
+*Demonstration of automated failover when primary region fails*
+
+### Infrastructure Deployment
+![Terraform Apply](images/terraform-deployment.png)
+*Infrastructure as Code deployment across multiple environments*
+
+## 🧪 Testing & Validation
+- **Automated Failover**: Simulated primary region outages
+- **Performance Testing**: Load testing during failover scenarios
+- **Data Integrity**: Validated cross-region replication consistency
+- **Recovery Time**: Measured and optimized RTO/RPO metrics
+
 ## 🔧 Project Structure
 ```
 dr_recovery/
 ├── environments/     # Environment-specific configurations
 ├── modules/         # Reusable Terraform modules
+└── images/          # Architecture diagrams and screenshots
 ```
 
 ---
