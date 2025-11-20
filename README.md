@@ -4,7 +4,8 @@
 A production-ready, automated disaster recovery solution implementing the **Pilot Light** strategy across AWS regions using Infrastructure as Code (Terraform). This project demonstrates enterprise-level cloud architecture, automation, and disaster recovery best practices.
 
 ##  📸 Pilot Light Diagram
-<img width="1186" height="417" alt="image" src="https://github.com/user-attachments/assets/d25c7c4f-52ba-4149-9511-acd97d6e3ba6" />
+<img width="1331" height="851" alt="Disaster_Recovery drawio" src="https://github.com/user-attachments/assets/72ed8f50-19b1-41a9-b41a-06c4bd81ed6e" />
+
 
 ## 🧪 Testing & Validation
 <img width="1179" height="402" alt="Failover Test Result" src="https://github.com/user-attachments/assets/6d29d542-13de-443b-9fbf-b73622f6da85" />
